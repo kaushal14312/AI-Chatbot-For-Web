@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        body {
+            color: #151a15;
+            font-family: Arial, sans-serif;
+        }
+        #chatbot-container {
+            background-color:transparent #eef3f0;
+            width: 400px;
+            height: 600px;
+            border: 1px solid #5e4af6c8;
+            padding: 20px;
+            color: rgb(3, 3, 3);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgb(2, 248, 64);
+        }
+        #chatbot-header {
+            height: 40px;
+            width: 95%;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            background-color: #00a2d5 ;
+            padding: 8px;
+            border-radius: 20px;
+            
+        }
+        #chatbot-body {
+            padding: 20px;
+            height: 400px;
+            overflow-y: scroll;
+        }
+        #chatbot-footer {
+            background-color:transparent #f0f0f0;
+            border-radius: 12px;
+            padding: 10px;
+        }
+        #user-input {
+            width: 95%;
+            height: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 1px inset #ccc;
+        }
+        #send-button {
+            width: 385px;
+            height: 30px;
+            padding: 5px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: rgb(247, 247, 247);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        #send-button:hover {
+            border: red;
+            background-color: #38d45c;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbot-container">
+        <div id="chatbot-header">
+            
+            
+        </div>
+        <div id="chatbot-body">
+            <p>Welcome to our site, if you need help simply reply to this message, we are online and ready to help.</p>
+            <div id="conversation"></div>
+        </div>
+        <div id="chatbot-footer">
+            <input id="user-input" type="text" placeholder="Type a message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const conversation = document.getElementById('conversation');
+
+// Function to send message
+const sendMessage = () => {
+    const userText = userInput.value;
+    if (userText !== '') {
+        conversation.innerHTML += `<p>You: ${userText}</p>`;
+        userInput.value = '';
+        fetch(`/get?msg=${encodeURIComponent(userText)}`)
+            .then(response => response.text())
+            .then(data => {
+                conversation.innerHTML += `<p>Chatbot: ${data}</p>`;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+};
+
+// Event listener for the send button
+sendButton.addEventListener('click', sendMessage);
+
+// Event listener for the Enter key
+userInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+});
+    </script>
+</body>
+</html>
